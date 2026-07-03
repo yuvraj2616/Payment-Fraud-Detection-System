@@ -1,47 +1,25 @@
-# Payment Fraud Detection Using Machine Learning Models
+# Payment Fraud Detection Using Machine Learning
 
-A machine learning project for detecting fraudulent online payment transactions. The project combines exploratory data analysis, dataset balancing, feature engineering, model training, model evaluation, and a static web interface called **FraudShield** for presenting fraud detection insights and transaction risk predictions.
+This project detects whether an online payment transaction is **fraudulent** or **legitimate** using machine learning models.
 
-## Table of Contents
+It also includes a simple web interface called **FraudShield**, which shows a dashboard, model insights, and a transaction prediction form.
 
-- [Project Overview](#project-overview)
-- [Key Features](#key-features)
-- [Repository Structure](#repository-structure)
-- [Dataset](#dataset)
-- [Machine Learning Workflow](#machine-learning-workflow)
-- [Models Used](#models-used)
-- [Evaluation Metrics](#evaluation-metrics)
-- [Web Application](#web-application)
-- [Installation and Setup](#installation-and-setup)
-- [How to Run](#how-to-run)
-- [Expected Outputs](#expected-outputs)
-- [Limitations](#limitations)
-- [Future Enhancements](#future-enhancements)
-- [Contributing](#contributing)
+## About the Project
 
-## Project Overview
+Online payment fraud is a common problem in digital transactions. Fraudulent transactions are usually very few compared to normal transactions, so detecting them can be difficult.
 
-Payment fraud is a major risk in digital banking, online transfers, and financial platforms. Fraudulent transactions are usually rare compared with legitimate transactions, which makes this a class imbalance problem. A model that only predicts "not fraud" can still look accurate, so this project focuses on building and comparing multiple machine learning models using fraud-specific evaluation metrics such as precision, recall, F1-score, and ROC-AUC.
+The main aim of this project is to train machine learning models that can learn patterns from transaction data and predict fraud more accurately.
 
-The main goal of this project is to classify each payment transaction as:
+## Features
 
-- `0`: Legitimate transaction
-- `1`: Fraudulent transaction
+- Payment fraud detection using machine learning.
+- Data analysis and preprocessing in Jupyter Notebook.
+- Handling imbalanced data using sampling techniques.
+- Training and comparing different ML models.
+- Simple dashboard for showing model results.
+- Transaction prediction form in the web app.
 
-The core machine learning implementation is available in the Jupyter notebooks inside the nested project folder. The root folder also includes a static dashboard interface that visualizes model results and simulates transaction risk scoring.
-
-## Key Features
-
-- Exploratory data analysis of online payment transactions.
-- Handling of severe class imbalance through upsampling and downsampling experiments.
-- Feature engineering based on account balance changes and transaction amount behavior.
-- Training and comparison of multiple supervised machine learning algorithms.
-- Model evaluation using classification metrics suitable for fraud detection.
-- Static frontend dashboard for presenting project insights.
-- Transaction prediction form that simulates fraud risk using dataset-inspired heuristics.
-- Charts and visual summaries powered by Chart.js.
-
-## Repository Structure
+## Project Files
 
 ```text
 .
@@ -50,204 +28,91 @@ The core machine learning implementation is available in the Jupyter notebooks i
 |-- index.html
 |-- index.css
 |-- app.js
-|-- .gitignore
 `-- Payment-Fraud-Detection-using-Machine-Learning-models-main/
     |-- Final_Project.ipynb
     `-- balanced_dataset_updated[1].ipynb
 ```
 
-### Important Files
-
-| File | Description |
-| --- | --- |
-| `README.md` | Detailed project documentation. |
-| `project_summary.md` | Existing technical summary of the project pipeline. |
-| `index.html` | Static FraudShield web app markup. |
-| `index.css` | Styling for the landing page, dashboard, forms, cards, and charts. |
-| `app.js` | Frontend navigation, chart rendering, and heuristic prediction logic. |
-| `Final_Project.ipynb` | Main notebook for preprocessing, training, and evaluating ML models. |
-| `balanced_dataset_updated[1].ipynb` | Notebook focused on EDA and dataset balancing using upsampling/downsampling. |
-
 ## Dataset
 
-This project is based on an online payment fraud detection dataset originally available on Kaggle as `jainilcoder/online-payment-fraud-detection`.
+The project uses an online payment fraud detection dataset from Kaggle.
 
-The dataset contains millions of transaction records with fields such as:
+The dataset contains transaction details such as:
 
-| Column | Description |
-| --- | --- |
-| `step` | Time step of the transaction. One step represents one hour. |
-| `type` | Transaction type, such as `PAYMENT`, `TRANSFER`, `CASH_OUT`, `DEBIT`, or `CASH_IN`. |
-| `amount` | Transaction amount. |
-| `nameOrig` | Identifier of the transaction sender. |
-| `oldbalanceOrg` | Sender balance before the transaction. |
-| `newbalanceOrig` | Sender balance after the transaction. |
-| `nameDest` | Identifier of the transaction receiver. |
-| `oldbalanceDest` | Receiver balance before the transaction. |
-| `newbalanceDest` | Receiver balance after the transaction. |
-| `isFraud` | Target label indicating whether the transaction is fraudulent. |
+- Transaction type
+- Transaction amount
+- Sender balance before and after payment
+- Receiver balance before and after payment
+- Fraud label
 
-The original dataset is highly imbalanced. Fraud cases represent only a very small portion of all transactions, so the project explores balancing techniques before model training.
+The target column is:
 
-> Note: Large CSV files are ignored by `.gitignore`, so the dataset is not expected to be committed directly to this repository.
+- `isFraud = 0` means the transaction is normal
+- `isFraud = 1` means the transaction is fraudulent
 
-## Machine Learning Workflow
+## Machine Learning Models Used
 
-The project follows a typical supervised machine learning pipeline:
+The project compares multiple machine learning models:
 
-1. **Load the dataset**
-   - Import transaction records into a pandas DataFrame.
-   - Inspect shape, data types, missing values, and class distribution.
+- Logistic Regression
+- Naive Bayes
+- Decision Tree
+- Random Forest
+- Gradient Boosting
+- Perceptron
+- K-Nearest Neighbors
+- Support Vector Machine
 
-2. **Exploratory Data Analysis**
-   - Analyze transaction types.
-   - Compare fraud and legitimate transaction behavior.
-   - Visualize class imbalance.
-   - Study relationships between balances, amount, and fraud labels.
+## Basic Workflow
 
-3. **Class Imbalance Handling**
-   - Experiment with upsampling the minority fraud class.
-   - Experiment with downsampling the majority legitimate class.
-   - Use a balanced dataset for fairer model learning.
-
-4. **Feature Cleaning**
-   - Drop high-cardinality identifier columns such as `nameOrig` and `nameDest`.
-   - Encode categorical columns where needed.
-   - Prepare numerical features for model training.
-
-5. **Feature Engineering**
-   - Create balance-change based features.
-   - Create relative transaction amount features.
-   - Use transaction type patterns to support fraud classification.
-
-6. **Feature Scaling**
-   - Apply `StandardScaler` where required.
-   - Scaling is especially useful for algorithms such as Logistic Regression, KNN, SVM, and Perceptron.
-
-7. **Train-Test Split**
-   - Split the dataset into training and testing sets.
-   - Train models on the training set.
-   - Evaluate model generalization on the test set.
-
-8. **Model Training and Evaluation**
-   - Train multiple classifiers.
-   - Generate classification reports.
-   - Compare accuracy, precision, recall, F1-score, and ROC-AUC.
-
-## Models Used
-
-The main notebook trains and evaluates several machine learning classifiers:
-
-| Model | Purpose |
-| --- | --- |
-| Logistic Regression | Linear baseline model for binary classification. |
-| Gaussian Naive Bayes | Probabilistic baseline model. |
-| Decision Tree Classifier | Interpretable tree-based classifier. |
-| Random Forest Classifier | Ensemble of decision trees for improved robustness. |
-| Gradient Boosting Classifier | Boosted ensemble model for stronger predictive performance. |
-| Perceptron | Linear classifier useful as a simple neural-style baseline. |
-| K-Nearest Neighbors | Distance-based classifier. |
-| Support Vector Classifier | Margin-based classifier for classification boundaries. |
+1. Load the dataset.
+2. Analyze the data.
+3. Clean and prepare the data.
+4. Balance the fraud and non-fraud records.
+5. Train different machine learning models.
+6. Test the models.
+7. Compare their performance.
 
 ## Evaluation Metrics
 
-Fraud detection should not be judged by accuracy alone because fraud cases are rare. This project uses the following metrics:
+The models are checked using:
 
-| Metric | Meaning |
-| --- | --- |
-| Accuracy | Overall percentage of correct predictions. |
-| Precision | Of all transactions predicted as fraud, how many were actually fraud. |
-| Recall | Of all actual fraud transactions, how many were detected. |
-| F1-Score | Harmonic mean of precision and recall. |
-| ROC-AUC | Ability of the model to separate fraud and legitimate classes across thresholds. |
-| Confusion Matrix | Breakdown of true positives, true negatives, false positives, and false negatives. |
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- Confusion matrix
 
-For fraud detection, recall is especially important because missing fraud can lead to financial loss. Precision is also important because too many false positives can block legitimate customers.
+These metrics help understand how well the models detect fraud.
 
-## Web Application
+## Web App
 
-The repository includes a static frontend called **FraudShield**.
-
-The app includes:
-
-- Landing page introducing the fraud detection system.
-- Dashboard with fraud statistics and charts.
-- Model performance visualization.
-- Recent predictions table.
-- Transaction prediction form.
-- Model insights page.
-- About page describing the system.
-
-The frontend uses:
+The web app is made using:
 
 - HTML
 - CSS
 - JavaScript
-- Chart.js from CDN
-- Google Fonts from CDN
+- Chart.js
 
-### Important Frontend Note
+It includes:
 
-The web app prediction form currently uses JavaScript heuristic scoring in `app.js`. It does not load a trained Python model directly. The prediction logic is intended as a demo interface inspired by fraud patterns from the dataset, such as:
+- Landing page
+- Dashboard
+- Prediction form
+- Model insights page
+- About page
 
-- Fraud appearing mainly in `TRANSFER` and `CASH_OUT` transactions.
-- Large transaction amounts.
-- Sender balance being drained to zero.
-- Balance mismatch between expected and actual values.
-- Receiver account anomalies.
+Note: The web app currently uses simple JavaScript logic to show predictions. It is a demo interface and is not directly connected to the trained machine learning model.
 
-For production use, the trained model and scaler should be exported from the notebook and served through an API.
+## How to Run the Project
 
-## Installation and Setup
+### Run the Notebooks
 
-### 1. Clone or Download the Repository
-
-```bash
-git clone <repository-url>
-cd Payment-Fraud-Detection-using-Machine-Learning-models-main
-```
-
-If you downloaded the ZIP file, extract it and open the extracted folder.
-
-### 2. Create a Python Environment
-
-```bash
-python -m venv .venv
-```
-
-Activate the environment:
-
-```bash
-# Windows
-.venv\Scripts\activate
-
-# macOS/Linux
-source .venv/bin/activate
-```
-
-### 3. Install Python Dependencies
-
-The notebooks use common data science and machine learning libraries:
+Install the required Python libraries:
 
 ```bash
 pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 ```
-
-Optional packages for saving models:
-
-```bash
-pip install joblib
-```
-
-### 4. Add the Dataset
-
-Download the online payment fraud dataset from Kaggle and place the CSV file in the project folder or update the notebook path to match your local dataset location.
-
-Because `.gitignore` excludes `*.csv`, dataset files will remain local and will not be committed.
-
-## How to Run
-
-### Run the Machine Learning Notebooks
 
 Start Jupyter Notebook:
 
@@ -255,26 +120,22 @@ Start Jupyter Notebook:
 jupyter notebook
 ```
 
-Open the notebooks from:
+Then open the notebook files:
 
-```text
-Payment-Fraud-Detection-using-Machine-Learning-models-main/
-```
+- `balanced_dataset_updated[1].ipynb`
+- `Final_Project.ipynb`
 
-Recommended order:
-
-1. `balanced_dataset_updated[1].ipynb`
-2. `Final_Project.ipynb`
-
-Run the cells from top to bottom.
+Run the cells step by step.
 
 ### Run the Web App
 
-The frontend is static, so no build step is required.
+Open this file in a browser:
 
-Option 1: Open `index.html` directly in a browser.
+```text
+index.html
+```
 
-Option 2: Serve the folder locally:
+You can also run it with a local server:
 
 ```bash
 python -m http.server 8000
@@ -286,79 +147,25 @@ Then open:
 http://localhost:8000
 ```
 
-## Expected Outputs
+## Requirements
 
-After running the notebooks, you should see:
+- Python
+- Jupyter Notebook
+- pandas
+- numpy
+- matplotlib
+- seaborn
+- scikit-learn
+- Web browser
 
-- Dataset summary and EDA outputs.
-- Class distribution visualizations.
-- Balanced dataset experiments.
-- Trained model results.
-- Classification reports.
-- Confusion matrices.
-- Performance comparisons across multiple classifiers.
+## Future Improvements
 
-After opening the web app, you should see:
+- Connect the web app with the trained ML model.
+- Add a backend using Flask or FastAPI.
+- Improve model accuracy with hyperparameter tuning.
+- Add more graphs and visualizations.
+- Save the best trained model for future use.
 
-- FraudShield landing page.
-- Interactive dashboard charts.
-- Prediction form for transaction details.
-- Simulated fraud risk result with probability, risk level, and key risk factors.
+## Conclusion
 
-## Limitations
-
-- The frontend prediction result is heuristic-based and not connected to a trained backend model.
-- The original dataset is extremely imbalanced, so sampling strategy affects model performance.
-- Default model hyperparameters may not produce optimal results.
-- Large raw CSV files are not included in the repository.
-- Notebook paths may need adjustment depending on where the dataset is stored locally.
-- Real payment fraud systems require monitoring, explainability, threshold tuning, and compliance review before deployment.
-
-## Future Enhancements
-
-Recommended improvements include:
-
-- Export the best trained model using `joblib` or `pickle`.
-- Export the fitted scaler and preprocessing steps with the model.
-- Build a Flask or FastAPI backend for real-time prediction.
-- Connect the frontend form to the backend API.
-- Add model persistence and versioning.
-- Add hyperparameter tuning with `GridSearchCV` or `RandomizedSearchCV`.
-- Try imbalance handling methods such as SMOTE or class-weighted models.
-- Add feature importance charts from Random Forest or Gradient Boosting.
-- Add automated tests for preprocessing and prediction logic.
-- Add a `requirements.txt` file for reproducible setup.
-- Add deployment instructions for cloud hosting.
-
-## Example Production Architecture
-
-```text
-User Interface
-     |
-     v
-Frontend App
-     |
-     v
-Prediction API
-     |
-     v
-Preprocessing Pipeline + Trained ML Model
-     |
-     v
-Fraud / Legitimate Prediction
-```
-
-## Contributing
-
-Contributions are welcome. Useful contribution areas include:
-
-- Improving notebook organization.
-- Adding a `requirements.txt` file.
-- Improving model tuning.
-- Connecting the frontend to a real model API.
-- Adding tests and reproducible experiment scripts.
-- Improving dashboard visualizations.
-
-## Disclaimer
-
-This project is intended for educational and experimental use. It should not be used as a production fraud detection system without additional validation, security review, compliance checks, and monitoring.
+This project shows how machine learning can be used to detect payment fraud. It includes both notebook-based model training and a simple frontend interface to present the results in an easy-to-understand way.
